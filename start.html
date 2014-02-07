@@ -1,0 +1,93 @@
+<html>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
+	</script>
+	<script>
+		$(document).ready(function(){
+			$("#email").blur(function(){
+				//check server to see if this username exists
+				$.post( "./checkEmailExists", { email: $('#email').val() }).done( function( data ) {
+					var emailExists = JSON.parse( data ).emailExists;
+					
+					if(emailExists === true)
+					{
+						$("#emailAddressExistsError").css('display','block');
+					}
+					else
+					{
+						$("#emailAddressExistsError").css('display','none');
+					}
+				});
+			});
+			//make sure that verification password matches the original
+			$("#pwVerify").blur(function(){
+				var password = $('#pw').val();
+				var passwordVerify = $('#pwVerify').val();
+				if(password != passwordVerify){
+					$("#passwordMatchError").css('display','block');
+				}
+				else
+				{
+					$("#passwordMatchError").css('display','none');
+				}
+			});
+		});
+	</script>
+	<style>
+		#userInfoTable
+		{
+			margin-right:auto;
+			margin-left:auto;
+		}
+		#saveButton
+		{
+			text-align: center;
+		}
+		h1
+		{
+			text-align: center;
+		}
+	</style>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html" charset=UTF-8" />
+	</head>
+	<body>
+		<h1>Create an account</h1>
+		<form  action="./upload" method="post">
+			<table id="userInfoTable">	
+				<tr>
+					<td>
+						<p>E-mail:</p>
+					</td>
+					<td>
+						<input type="text" name="email" id="email" maxlength="30" size="30"></textarea>
+					</td>
+					<td style="width: 200px;">
+						<p id="emailAddressExistsError" style="display:none;color:red;">Email already saved.</p>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p>Password:</p>
+					</td>
+					<td>
+						<input type="password" name="password" id="pw" maxlength="30" size="30"></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p>Re-enter password:</p>
+					</td>
+					<td>
+						<input type="password" id="pwVerify" maxlength="30" size="30"></textarea>
+					</td>
+					<td>
+						<p id="passwordMatchError" style="display:none;color:red;">Passwords do not match.</p>
+					</td>
+				</tr>
+			</table>
+			<div id="saveButton" >
+				<input type="submit" value="Save account details" />
+			</div>
+		</form>
+	</body>
+</html>
